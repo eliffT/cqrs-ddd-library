@@ -2,11 +2,18 @@ package com.turkcell.libraryappddd.domain.model.book;
 
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
+import com.turkcell.libraryappddd.domain.model.author.Author;
+import com.turkcell.libraryappddd.domain.model.category.Category;
+import com.turkcell.libraryappddd.domain.model.publisher.Publisher;
 
 import java.util.UUID;
 
 public class Book {
     private final DomainId<Book> id;
+    private final DomainId<Author> authorId;
+    private final DomainId<Publisher> publisherId;
+    private final DomainId<Category> categoryId;
+
     private final String isbn;
     private String title;
     private Integer year;
@@ -17,7 +24,8 @@ public class Book {
 
 
     private Book(DomainId<Book> id, String isbn, String title, Integer year, String language, Integer totalCopies,
-                 Integer availableCopies, BookStatus status) {
+                 Integer availableCopies, BookStatus status, DomainId<Author> authorId,
+                 DomainId<Publisher> publisherId, DomainId<Category> categoryId) {
         this.id = id;
         this.isbn = isbn;
         this.title = title;
@@ -26,27 +34,35 @@ public class Book {
         this.totalCopies = totalCopies;
         this.availableCopies = availableCopies;
         this.status = status;
+        this.authorId = authorId;
+        this.publisherId = publisherId;
+        this.categoryId = categoryId;
     }
 
     public static Book create(String title, Integer year, String language, Integer totalCopies,
-                              Integer availableCopies) {
+                              DomainId<Author> authorId, DomainId<Publisher> publisherId, DomainId<Category> categoryId) {
         validateTitle(title);
         checkYear(year);
         validateLanguage(language);
         checkAmount(totalCopies);
-        checkAmount(availableCopies);
-        validateStockConsistency(totalCopies, availableCopies);
         String isbn = generateIsbn();
+        validateIsbn(isbn);
 
-        return new Book(DomainId.generate(), isbn,  title, year, language, totalCopies, availableCopies, BookStatus.ACTIVE);
+        return new Book(DomainId.generate(), isbn,  title, year, language,
+                        totalCopies, totalCopies, BookStatus.ACTIVE,
+                        authorId, publisherId, categoryId);
     }
 
     public static Book rehydrate(DomainId<Book> id, String isbn, String title, Integer year, String language,
-                                 Integer totalCopies, Integer availableCopies, BookStatus status) {
-        return new Book(id, isbn, title, year, language, totalCopies, availableCopies, status);
+                                 Integer totalCopies, Integer availableCopies,  BookStatus status, DomainId<Author> authorId,
+                                 DomainId<Publisher> publisherId, DomainId<Category> categoryId) {
+
+        return new Book(id, isbn, title, year, language,
+                        totalCopies, availableCopies,  status,
+                        authorId, publisherId, categoryId);
     }
 
-    // Domain Setters
+    // Business Rules / Methods
     public void rename(String title) {
         validateTitle(title);
         this.title = title;
@@ -74,8 +90,31 @@ public class Book {
         checkAmount(quantityToRestock);
         this.totalCopies += quantityToRestock;
         this.availableCopies += quantityToRestock;
-        validateStockConsistency(this.totalCopies, this.availableCopies);
+        ensureStockConsistency(this.totalCopies, this.availableCopies);
     }
+
+    public void resetAvailableCopies() {
+        this.availableCopies = this.totalCopies;
+        this.status = this.availableCopies > 0 ? BookStatus.ACTIVE : BookStatus.INACTIVE;
+    }
+
+    public void borrow() {
+        if (availableCopies <= 0) throw new IllegalStateException("No copies available to borrow");
+        this.availableCopies--;
+        if (this.availableCopies == 0) this.status = BookStatus.INACTIVE;
+    }
+
+    public void returnBook() {
+        if (availableCopies >= totalCopies)
+            throw new IllegalStateException("Available copies cannot exceed total copies");
+        this.availableCopies++;
+        this.status = BookStatus.ACTIVE;
+    }
+
+    private static String generateIsbn() {
+        return "ISBN-" + UUID.randomUUID().toString().substring(0, 13);
+    }
+
 
     // Validation
     private static void checkYear(Integer year) {
@@ -112,15 +151,17 @@ public class Book {
             throw new IllegalArgumentException("Amount must be greater than 0");
     }
 
-    private static void validateStockConsistency(Integer totalCopies, Integer availableCopies) {
+    private static void ensureStockConsistency(Integer totalCopies, Integer availableCopies) {
         if (availableCopies > totalCopies) {
             throw new IllegalArgumentException("Available copies cannot exceed total copies");
         }
     }
 
-    private static String generateIsbn() {
-        return "ISBN-" + UUID.randomUUID().toString().substring(0, 13);
+    private static void validateIsbn(String isbn) {
+        if (isbn == null || isbn.isBlank()) throw new IllegalArgumentException("ISBN cannot be empty");
     }
+
+
 
     // Getters
     public String isbn() {
@@ -146,6 +187,9 @@ public class Book {
     public BookStatus status() {
         return status;
     }
+    public DomainId<Author> authorId() { return authorId; }
+    public DomainId<Publisher> publisherId() { return publisherId; }
+    public DomainId<Category> categoryId() { return categoryId; }
 
 
 }

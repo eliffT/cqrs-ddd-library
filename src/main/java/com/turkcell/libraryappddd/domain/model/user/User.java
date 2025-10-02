@@ -16,25 +16,19 @@ public class User {
         private LocalDate createdAt;
         private MembershipLevel membershipLevel;
 
-        private User(DomainId<User> id,
-                     String fullName,
-                     String username,
-                     String password,
-                     String email,
-                     String phone,
-                     LocalDate createdAt,
-                     MembershipLevel membershipLevel) {
-            this.id = Objects.requireNonNull(id, "User id cannot be null");
-            this.fullName = Objects.requireNonNull(fullName, "Full name cannot be null");
-            this.username = Objects.requireNonNull(username, "Username cannot be null");
-            this.password = Objects.requireNonNull(password, "Password cannot be null");
-            this.email = Objects.requireNonNull(email, "Email cannot be null");
-            this.phone = Objects.requireNonNull(phone, "Phone cannot be null");
-            this.createdAt = Objects.requireNonNull(createdAt, "CreatedAt cannot be null");
-            this.membershipLevel = Objects.requireNonNull(membershipLevel, "Membership level cannot be null");
-        }
+    public User(DomainId<User> id, String fullName, String username, String password,
+                String email, String phone, LocalDate createdAt, MembershipLevel membershipLevel) {
+        this.id = id;
+        this.fullName = fullName;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.createdAt = createdAt;
+        this.membershipLevel = membershipLevel;
+    }
 
-        // User Create (factory)
+    // User Create (factory)
         public static User create(String fullName,
                                   String username,
                                   String password,
@@ -75,9 +69,6 @@ public class User {
             this.membershipLevel = Objects.requireNonNull(membershipLevel, "Membership level cannot be null");
         }
 
-        public boolean isGoldMember() {
-            return this.membershipLevel == MembershipLevel.GOLD;
-        }
 
         public void rename(String fullName) {
             validateFullName(fullName);
@@ -135,5 +126,9 @@ public class User {
         public String phone() { return phone; }
         public LocalDate createdAt() { return createdAt; }
         public MembershipLevel membershipLevel() { return membershipLevel; }
-    }
+        public int getLoanDays() {
+                return this.membershipLevel.getLoanDays();
+        }
+
 }
+

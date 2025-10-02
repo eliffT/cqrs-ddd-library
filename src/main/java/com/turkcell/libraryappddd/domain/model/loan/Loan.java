@@ -18,21 +18,25 @@ public class Loan {
     private LocalDate returnDate;
     private LoanStatus status;
 
+
+
     private Loan(DomainId<Loan> id, DomainId<Book> bookId, DomainId<User> userId, LocalDate borrowDate, LocalDate dueDate,
                  LoanStatus status) {
         this.id = id;
         this.bookId = Objects.requireNonNull(bookId, "bookId cannot be null");
         this.userId = Objects.requireNonNull(userId, "userId cannot be null");
-        this.borrowDate = Objects.requireNonNull(borrowDate, "borrowDate cannot be null");
-        this.dueDate = Objects.requireNonNull(dueDate, "dueDate cannot be null");
-        this.status = Objects.requireNonNull(status, "status cannot be null");
-
+        this.borrowDate = borrowDate;
+        this.dueDate = dueDate;
+        this.status = status;
     }
 
-    public static Loan create(DomainId<Book> bookId, User user, LocalDate borrowDate){
+    public static Loan create(DomainId<Book> bookId, DomainId<User> userId,  int loanDays){
 
-        LocalDate dueDate = borrowDate.plusDays(user.membershipLevel().getLoanDays());
-        return new Loan(DomainId.generate(), bookId, user.id(), borrowDate, dueDate, LoanStatus.BORROWED);
+        LocalDate borrowDate = LocalDate.now();
+        if (loanDays <= 0) throw new IllegalArgumentException("Loan days must be greater than 0");
+        LocalDate dueDate = borrowDate.plusDays(loanDays);
+
+        return new Loan(DomainId.generate(), bookId, userId, borrowDate, dueDate, LoanStatus.BORROWED);
     }
 
     public static Loan rehydrate(DomainId<Loan> id,
@@ -42,25 +46,33 @@ public class Loan {
                                  LocalDate dueDate,
                                  LocalDate returnDate,
                                  LoanStatus status) {
-        return new Loan(id, bookId, userId, borrowDate, dueDate, status).withReturnDate(returnDate);
+
+        Loan loan = new Loan(id, bookId, userId, borrowDate, dueDate, status);
+        if (status == LoanStatus.RETURNED && returnDate != null)
+            loan.returnDate = returnDate;
+        return loan;
     }
 
-    private Loan withReturnDate(LocalDate returnDate) {
-        this.returnDate = returnDate;
-        return this;
+
+    private boolean isActive() {
+        return status == LoanStatus.BORROWED || status == LoanStatus.LATE;
     }
 
-    public void markAsReturned(LocalDate returnDate) {
-        if (returnDate.isBefore(borrowDate)) {
-            throw new IllegalArgumentException("Return date cannot be before borrow date");
-        }
-        this.returnDate = returnDate;
+    public void markAsReturned() {
+        if(!isActive()) throw new IllegalStateException("Only borrowed or late loans can be returned");
         this.status = LoanStatus.RETURNED;
+        this.returnDate = LocalDate.now();
     }
 
-    public void cancel() {
-        this.status = LoanStatus.CANCELLED;
+    public boolean checkAndMarkOverdue(LocalDate today) {
+       // Ödünç alınan kitapların teslim tarihi kontrol edilir, gecikmiş ise LATE atanır
+        if (status == LoanStatus.BORROWED && today.isAfter(dueDate)) {
+            status = LoanStatus.LATE;
+            return true;
+        }
+        return false; // Gecikme yoksa false
     }
+
 
     //Getters
     public DomainId<Loan> id() { return id; }

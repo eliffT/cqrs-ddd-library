@@ -1,7 +1,6 @@
 package com.turkcell.libraryappddd.domain.repository;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.author.Author;
 import com.turkcell.libraryappddd.domain.model.book.Book;
 
 import java.util.List;

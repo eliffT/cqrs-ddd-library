@@ -2,56 +2,68 @@ package com.turkcell.libraryappddd.domain.model.reservation;
 
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
+import com.turkcell.libraryappddd.domain.model.book.Book;
+import com.turkcell.libraryappddd.domain.model.user.User;
 
 import java.time.LocalDate;
 
 public class Reservation {
+
     private final DomainId<Reservation> id;
+    private final DomainId<User> userId;
+    private final DomainId<Book> bookId;
     private LocalDate reservationDate;
-    private static LocalDate creationDate;
+    private final LocalDate creationDate;
     private LocalDate expireDate;
-    private static ReservationStatus status;
+    private ReservationStatus status;
 
-    private Reservation(DomainId<Reservation>  id, LocalDate reservationDate, LocalDate expireDate) {
+    private Reservation(DomainId<Reservation>  id, DomainId<User> userId, DomainId<Book> bookId,
+                        LocalDate reservationDate, LocalDate expireDate, ReservationStatus status) {
         this.id = id;
+        this.userId = userId;
+        this.bookId = bookId;
         this.reservationDate = reservationDate;
+        this.creationDate = LocalDate.now();
         this.expireDate = expireDate;
+        this.status = status;
+
     }
 
-    public static Reservation create(LocalDate reservationDate, LocalDate expireDate){
-        setCreationDate();
-        activate();
-        return new Reservation(DomainId.generate(), reservationDate, expireDate);
+    public static Reservation create(DomainId<User> userId, DomainId<Book> bookId, LocalDate reservationDate,
+                                     int validDays){
+
+        if (userId == null) throw new IllegalArgumentException("User cannot be null");
+        if (bookId == null) throw new IllegalArgumentException("Book cannot be null");
+        if (reservationDate == null) reservationDate = LocalDate.now();
+        if (validDays <= 0) throw new IllegalArgumentException("Valid days must be > 0");
+
+        LocalDate expireDate = reservationDate.plusDays(validDays);
+        return new Reservation(DomainId.generate(), userId, bookId, reservationDate, expireDate, ReservationStatus.ACTIVE);
     }
 
-    public static Reservation rehydrate(DomainId<Reservation>  id, LocalDate reservationDate, LocalDate expireDate)
+    public static Reservation rehydrate(DomainId<Reservation> id, DomainId<User> userId, DomainId<Book> bookId,
+                                        LocalDate reservationDate, LocalDate expireDate, ReservationStatus status)
     {
-        return new Reservation(id,reservationDate,expireDate);
+        return new Reservation(id, userId, bookId, reservationDate, expireDate, status);
     }
 
-    public void setReservationDate(LocalDate reservationDate) {
-        this.reservationDate = reservationDate;
-    }
-
-    public static void setCreationDate() {
-        creationDate = LocalDate.now();
-    }
-
-    public void setExpireDate(LocalDate expireDate) {
-        this.expireDate = expireDate;
-    }
-
-    public static void activate(){
-        status = ReservationStatus.ACTIVE;
-    }
-
-    public static void deactivate(){
+    public void cancel() {
+        if (status != ReservationStatus.ACTIVE) {
+            throw new IllegalStateException("Only active reservations can be cancelled");
+        }
         status = ReservationStatus.CANCELLED;
     }
+
+    public boolean isExpired(LocalDate today) {
+        return today.isAfter(expireDate);
+    }
+
 
     public DomainId<Reservation>  id() {
         return id;
     }
+    public DomainId<User> userId() { return userId; }
+    public DomainId<Book> bookId() { return bookId; }
     public LocalDate reservationDate() {
         return reservationDate;
     }
