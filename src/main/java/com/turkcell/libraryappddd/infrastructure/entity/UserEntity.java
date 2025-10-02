@@ -4,7 +4,7 @@ import com.turkcell.libraryappddd.domain.model.user.MembershipLevel;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +33,7 @@ public class UserEntity {
 
     @CreationTimestamp      // Otomatik tarih ataması yapılır.
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Enumerated(EnumType.STRING)
     private MembershipLevel membershipLevel = MembershipLevel.STANDARD;
@@ -92,11 +92,11 @@ public class UserEntity {
         this.phone = phone;
     }
 
-    public LocalDateTime createdAt() {
+    public LocalDate createdAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
 
