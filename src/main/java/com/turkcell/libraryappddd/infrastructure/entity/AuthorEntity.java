@@ -1,5 +1,7 @@
 package com.turkcell.libraryappddd.infrastructure.entity;
 
+import com.turkcell.libraryappddd.domain.model.DomainId;
+import com.turkcell.libraryappddd.domain.model.author.Author;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -18,6 +20,7 @@ public class AuthorEntity {
 
     @OneToMany(mappedBy = "author")
     private List<BookEntity> books;
+
 
     public UUID id() {
         return id;
