@@ -7,7 +7,9 @@ import com.turkcell.libraryappddd.domain.model.user.User;
 import com.turkcell.libraryappddd.infrastructure.entity.BookEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.ReservationEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.UserEntity;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ReservationEntityMapper {
 
     public ReservationEntity toEntity(Reservation r, BookEntity book, UserEntity user) {
