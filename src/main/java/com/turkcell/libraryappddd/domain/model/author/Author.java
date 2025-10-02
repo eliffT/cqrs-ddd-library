@@ -1,57 +1,44 @@
 package com.turkcell.libraryappddd.domain.model.author;
 
+import com.turkcell.libraryappddd.domain.model.DomainId;
+
 public class Author {
-    private final AuthorId id;
-    private String firstName;
-    private String lastName;
 
-    private Author(AuthorId id, String firstName, String lastName) {
+    private final DomainId<Author> id;
+    private String fullName;
+
+    private Author(DomainId<Author> id, String fullName) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.fullName = fullName;
     }
 
-    public static Author create(String firstName, String lastName) {
-        validateFirstName(firstName);
-        validateLastName(lastName);
-        return new Author(AuthorId.generate(), firstName, lastName);
+    public static Author create(String fullName) {
+        validateFullName(fullName);
+        return new Author(DomainId.generate(), fullName);
     }
 
-    public static Author rehydrate(AuthorId id, String firstName, String lastName) {
-        return new Author(id, firstName, lastName);
+    public static Author rehydrate(DomainId<Author> id, String fullName) {
+        return new Author(id, fullName);
     }
 
-    public void setFirstName(String firstName) {
-        validateFirstName(firstName);
-        this.firstName = firstName;
+    public void rename(String fullName) {
+        validateFullName(fullName);
+        this.fullName = fullName;
     }
 
-    public void setLastName(String lastName) {
-        validateLastName(lastName);
-        this.lastName = lastName;
-    }
-
-    public static void validateFirstName(String firstName){
-        if(firstName == null || firstName.isEmpty())
+    private static void validateFullName(String fullName){
+        if(fullName == null || fullName.isEmpty())
             throw new IllegalArgumentException("First name cannot be empty");
-        if(firstName.length() >= 3 || firstName.length() < 255)
-            throw new IllegalArgumentException("First name must be between 3 and 255 characters");
+        if(fullName.length() > 255)
+            throw new IllegalArgumentException("Full name cannot be longer than 255 characters");
     }
 
-    public static void validateLastName(String lastName){
-        if(lastName == null || lastName.isEmpty())
-            throw new IllegalArgumentException("Last name cannot be empty");
-        if(lastName.length() >= 3 || lastName.length() < 255)
-            throw new IllegalArgumentException("Last name must be between 3 and 255 characters");
-    }
 
-    public AuthorId id() {
+    public DomainId<Author> id() {
         return id;
     }
-    public String firstName() {
-        return firstName;
+    public String fullName() {
+        return fullName;
     }
-    public String lastName() {
-        return lastName;
-    }
+
 }

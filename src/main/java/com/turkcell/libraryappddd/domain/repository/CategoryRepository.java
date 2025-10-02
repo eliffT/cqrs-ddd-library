@@ -1,7 +1,6 @@
 package com.turkcell.libraryappddd.domain.repository;
 
 import com.turkcell.libraryappddd.domain.model.category.Category;
-import com.turkcell.libraryappddd.domain.model.category.CategoryId;
 
 import java.util.List;
 import java.util.Optional;

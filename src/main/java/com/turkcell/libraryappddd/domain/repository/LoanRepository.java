@@ -1,7 +1,6 @@
 package com.turkcell.libraryappddd.domain.repository;
 
 import com.turkcell.libraryappddd.domain.model.loan.Loan;
-import com.turkcell.libraryappddd.domain.model.loan.LoanId;
 
 import java.util.List;
 import java.util.Optional;
