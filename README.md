@@ -24,7 +24,3 @@ Handles books, categories, and reservations with proper domain validations and s
 
 ---
 
-## Usage
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/CQRS-DDD-Library.git
