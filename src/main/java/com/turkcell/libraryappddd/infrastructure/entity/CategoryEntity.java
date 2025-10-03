@@ -18,6 +18,9 @@ public class CategoryEntity {
     @OneToMany(mappedBy = "category")
     private List<BookEntity> Books;
 
+    @Column(name = "description", nullable = false, length = 100)
+    private String description;
+
     public UUID id() {
         return id;
     }
@@ -40,5 +43,13 @@ public class CategoryEntity {
 
     public void setBooks(List<BookEntity> books) {
         Books = books;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
