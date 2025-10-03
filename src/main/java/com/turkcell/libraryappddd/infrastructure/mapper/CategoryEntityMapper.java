@@ -18,7 +18,7 @@ public class CategoryEntityMapper {
 
     public Category toDomain(CategoryEntity entity) {
         return Category.rehydrate(
-                new DomainId<>(entity.id()),
+                new DomainId<Category>(entity.id()),
                 entity.name(),
                 entity.description()
         );

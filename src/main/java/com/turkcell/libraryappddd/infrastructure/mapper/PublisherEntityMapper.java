@@ -17,7 +17,7 @@ public class PublisherEntityMapper {
 
     public Publisher toDomain(PublisherEntity entity) {
         return Publisher.rehydrate(
-                new DomainId<>(entity.id()),
+                new DomainId<Publisher>(entity.id()),
                 entity.name()
         );
     }

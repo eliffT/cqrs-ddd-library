@@ -18,7 +18,7 @@ public class FineEntityMapper {
 
     public Fine toDomain(FineEntity entity) {
         return Fine.rehydrate(
-                new DomainId<>(entity.id()),
+                new DomainId<Fine>(entity.id()),
                 entity.isPaid(),
                 BigDecimal.valueOf(entity.amount()),
                 entity.paymentDate()

@@ -2,7 +2,9 @@ package com.turkcell.libraryappddd.infrastructure.mapper;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
 import com.turkcell.libraryappddd.domain.model.author.Author;
+import com.turkcell.libraryappddd.domain.model.book.Book;
 import com.turkcell.libraryappddd.domain.model.loan.Loan;
+import com.turkcell.libraryappddd.domain.model.user.User;
 import com.turkcell.libraryappddd.infrastructure.entity.AuthorEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import org.springframework.stereotype.Component;
@@ -21,8 +23,8 @@ public class LoanEntityMapper {
 
     public Loan toDomain(LoanEntity entity) {
         return Loan.rehydrate(new DomainId<>(entity.id()),
-                new DomainId<>(entity.book().id()),
-                new DomainId<>(entity.user().id()),
+                new DomainId<Book>(entity.book().id()),
+                new DomainId<User>(entity.user().id()),
                 entity.borrowDate(),
                 entity.dueDate(),
                 entity.returnDate(),

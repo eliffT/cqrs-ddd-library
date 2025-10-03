@@ -1,7 +1,10 @@
 package com.turkcell.libraryappddd.infrastructure.mapper;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
+import com.turkcell.libraryappddd.domain.model.author.Author;
 import com.turkcell.libraryappddd.domain.model.book.Book;
+import com.turkcell.libraryappddd.domain.model.category.Category;
+import com.turkcell.libraryappddd.domain.model.publisher.Publisher;
 import com.turkcell.libraryappddd.infrastructure.entity.BookEntity;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +25,7 @@ public class BookEntityMapper {
 
     public Book toDomain(BookEntity entity) {
         return Book.rehydrate(
-                new DomainId<>(entity.id()),
+                new DomainId<Book>(entity.id()),
                 entity.isbn(),
                 entity.title(),
                 entity.year(),
@@ -30,9 +33,9 @@ public class BookEntityMapper {
                 entity.totalCopies(),
                 entity.availableCopies(),
                 entity.status(),
-                new DomainId<>(entity.author().id()),
-                new DomainId<>(entity.publisher().id()),
-                new DomainId<>(entity.category().id())
+                new DomainId<Author>(entity.author().id()),
+                new DomainId<Publisher>(entity.publisher().id()),
+                new DomainId<Category>(entity.category().id())
         );
     }
 
