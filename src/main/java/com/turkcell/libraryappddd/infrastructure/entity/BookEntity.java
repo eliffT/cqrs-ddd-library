@@ -1,7 +1,6 @@
 package com.turkcell.libraryappddd.infrastructure.entity;
 
 import com.turkcell.libraryappddd.domain.model.book.BookStatus;
-import com.turkcell.libraryappddd.domain.repository.LoanRepository;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -24,7 +23,7 @@ public class BookEntity {
     @Column(name = "year",  nullable = false, length = 4)
     private Integer year;
 
-    @Column(name = "lang", nullable = false, length = 10, unique = true)
+    @Column(name = "lang", nullable = false, length = 10)
     private String language;
 
     @Column(name = "total_copies", nullable = false)

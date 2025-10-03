@@ -101,14 +101,18 @@ public class Book {
     public void borrow() {
         if (availableCopies <= 0) throw new IllegalStateException("No copies available to borrow");
         this.availableCopies--;
-        if (this.availableCopies == 0) this.status = BookStatus.INACTIVE;
+        if (this.availableCopies == 0) updateStatus(BookStatus.INACTIVE);
     }
 
     public void returnBook() {
         if (availableCopies >= totalCopies)
             throw new IllegalStateException("Available copies cannot exceed total copies");
         this.availableCopies++;
-        this.status = BookStatus.ACTIVE;
+        updateStatus(BookStatus.ACTIVE);
+    }
+
+    private void updateStatus(BookStatus status) {
+        this.status = status;
     }
 
     private static String generateIsbn() {

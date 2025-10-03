@@ -29,7 +29,10 @@ public class BookEntityMapper {
                 entity.language(),
                 entity.totalCopies(),
                 entity.availableCopies(),
-                entity.status()
+                entity.status(),
+                new DomainId<>(entity.author().id()),
+                new DomainId<>(entity.publisher().id()),
+                new DomainId<>(entity.category().id())
         );
     }
 
