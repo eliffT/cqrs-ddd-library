@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ReservationEntityMapper {
 
-    public ReservationEntity toEntity(Reservation r, BookEntity book, UserEntity user) {
+    public ReservationEntity toEntity(Reservation r) {
         if (r == null) return null;
 
         ReservationEntity entity = new ReservationEntity();
@@ -20,8 +20,6 @@ public class ReservationEntityMapper {
         entity.setReservationDate(r.reservationDate());
         entity.setExpireAt(r.expireDate());
 
-        entity.setUser(user);
-        entity.setBook(book);
         return entity;
     }
 
