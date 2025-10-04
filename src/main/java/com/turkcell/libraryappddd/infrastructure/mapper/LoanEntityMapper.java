@@ -8,6 +8,8 @@ import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class LoanEntityMapper {
     public LoanEntity toEntity(Loan loan) {
@@ -21,9 +23,7 @@ public class LoanEntityMapper {
         loanEntity.setStatus(loan.status());
 
         if (loan.userId() != null)
-            loanEntity.setUser(new UserEntity(){{
-                setId(loan.userId().value());
-            }});
+            loanEntity.setUser(new UserEntity(loan.userId().value()));
         return loanEntity;
     }
 

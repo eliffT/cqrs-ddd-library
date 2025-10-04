@@ -17,7 +17,7 @@ public final class Fine {
         this.createdAt = LocalDate.now();
     }
 
-    public static Fine create(BigDecimal amount, String reason) {
+    public static Fine of(BigDecimal amount, String reason) {
         return new Fine(amount, reason);
     }
 

@@ -21,6 +21,12 @@ public class AuthorEntity {
     @OneToMany(mappedBy = "author")
     private List<BookEntity> books;
 
+    public AuthorEntity() {} // JPA için gerekli
+
+    // Mapper için ID constructor
+    public AuthorEntity(UUID id) {
+        this.id = id;
+    }
 
     public UUID id() {
         return id;

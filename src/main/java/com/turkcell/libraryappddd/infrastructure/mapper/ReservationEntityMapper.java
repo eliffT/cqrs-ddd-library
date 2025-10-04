@@ -9,6 +9,8 @@ import com.turkcell.libraryappddd.infrastructure.entity.ReservationEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class ReservationEntityMapper {
 
@@ -18,18 +20,16 @@ public class ReservationEntityMapper {
         ReservationEntity entity = new ReservationEntity();
         entity.setId(r.id().value());
         entity.setReservationDate(r.reservationDate());
-        entity.setExpireAt(r.expireDate());
+        entity.setExpireDate(r.expireDate());
         entity.setStatus(r.status());
 
         if (r.userId() != null)
-            entity.setUser(new UserEntity(){{
-                setId(r.userId().value());
-            }});
+            entity.setUser(new UserEntity(UUID.fromString(r.userId().value())));
 
         if (r.bookId() != null)
-            entity.setBook(new BookEntity(){{
-                setId(r.bookId().value());
-            }});
+            entity.setBook(new BookEntity(UUID.fromString(r.bookId().value())));
+
+
 
         return entity;
     }
@@ -47,7 +47,7 @@ public class ReservationEntityMapper {
                 new DomainId<User>(entity.user().id()),
                 new DomainId<Book>(entity.book().id()),
                 entity.reservationDate(),
-                entity.expireAt(),
+                entity.expireDate(),
                 entity.status()
         );
     }

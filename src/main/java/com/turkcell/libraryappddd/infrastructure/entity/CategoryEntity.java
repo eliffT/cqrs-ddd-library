@@ -21,6 +21,13 @@ public class CategoryEntity {
     @Column(name = "description", nullable = false, length = 100)
     private String description;
 
+    public CategoryEntity() {} // JPA için gerekli
+
+    // Mapper için ID constructor
+    public CategoryEntity(UUID id) {
+        this.id = id;
+    }
+
     public UUID id() {
         return id;
     }

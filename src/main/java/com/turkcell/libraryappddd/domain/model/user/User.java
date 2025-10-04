@@ -51,6 +51,12 @@ public class User {
     }
 
     // Business Rules / Methods
+
+    public boolean canBorrow(int currentActiveLoans) {
+        return currentActiveLoans < membershipLevel.getMaxLoans();
+    }
+
+
     public void changeMembershipLevel(MembershipLevel membershipLevel) {
         this.membershipLevel = Objects.requireNonNull(membershipLevel, "Membership level cannot be null");
     }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class CreateAuthorMapper {
     public Author toDomain(CreateAuthorCommand command){
         return Author.create(command.fullName());
-
     }
 
     public CreatedAuthorResponse toResponse(Author author){
