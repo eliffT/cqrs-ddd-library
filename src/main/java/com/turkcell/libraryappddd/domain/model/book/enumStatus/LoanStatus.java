@@ -1,4 +1,4 @@
-package com.turkcell.libraryappddd.domain.model.loan;
+package com.turkcell.libraryappddd.domain.model.book.enumStatus;
 
 public enum LoanStatus {
     BORROWED,   // Kitap ödünç alınmış

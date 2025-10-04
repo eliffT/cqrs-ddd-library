@@ -1,7 +1,7 @@
 package com.turkcell.libraryappddd.infrastructure.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.turkcell.libraryappddd.domain.model.loan.LoanStatus;
+import com.turkcell.libraryappddd.domain.model.book.enumStatus.LoanStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;

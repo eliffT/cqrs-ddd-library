@@ -1,8 +1,8 @@
-package com.turkcell.libraryappddd.domain.model.reservation;
+package com.turkcell.libraryappddd.domain.model.book;
 
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.book.Book;
+import com.turkcell.libraryappddd.domain.model.book.enumStatus.ReservationStatus;
 import com.turkcell.libraryappddd.domain.model.user.User;
 
 import java.time.LocalDate;
@@ -17,8 +17,8 @@ public class Reservation {
     private LocalDate expireDate;
     private ReservationStatus status;
 
-    private Reservation(DomainId<Reservation>  id, DomainId<User> userId, DomainId<Book> bookId,
-                        LocalDate reservationDate, LocalDate expireDate, ReservationStatus status) {
+    private Reservation(DomainId<Reservation>  id, DomainId<User> userId, DomainId<Book> bookId, LocalDate reservationDate,
+                        LocalDate expireDate, ReservationStatus status) {
         this.id = id;
         this.userId = userId;
         this.bookId = bookId;
@@ -26,7 +26,6 @@ public class Reservation {
         this.creationDate = LocalDate.now();
         this.expireDate = expireDate;
         this.status = status;
-
     }
 
     public static Reservation create(DomainId<User> userId, DomainId<Book> bookId, LocalDate reservationDate,
@@ -48,9 +47,9 @@ public class Reservation {
     }
 
     public void cancel() {
-        if (status != ReservationStatus.ACTIVE) {
+        if (status != ReservationStatus.ACTIVE)
             throw new IllegalStateException("Only active reservations can be cancelled");
-        }
+
         status = ReservationStatus.CANCELLED;
     }
 
@@ -58,6 +57,12 @@ public class Reservation {
         return today.isAfter(expireDate);
     }
 
+    public void markAsExpired() {
+        if (!isExpired(LocalDate.now())) {
+            throw new IllegalStateException("Cannot mark as expired before expiration date");
+        }
+        status = ReservationStatus.EXPIRED;
+    }
 
     public DomainId<Reservation>  id() {
         return id;

@@ -28,7 +28,7 @@ public class Author {
 
     private static void validateFullName(String fullName){
         if(fullName == null || fullName.isEmpty())
-            throw new IllegalArgumentException("First name cannot be empty");
+            throw new IllegalArgumentException("Full name cannot be empty");
         if(fullName.length() > 255)
             throw new IllegalArgumentException("Full name cannot be longer than 255 characters");
     }
