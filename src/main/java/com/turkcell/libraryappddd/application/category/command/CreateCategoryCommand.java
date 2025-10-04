@@ -7,5 +7,5 @@ import jakarta.validation.constraints.Size;
 
 public record CreateCategoryCommand(
         @NotBlank @Size(min = 2, max = 100) String name,
-        @NotBlank @Size(min = 2, max = 255) String description
-) implements Command<CreatedCategoryResponse> { }
+        @NotBlank @Size(min = 2, max = 255) String description)
+        implements Command<CreatedCategoryResponse> { }

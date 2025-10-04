@@ -21,7 +21,7 @@ public class ListAuthorsQueryHandler implements QueryHandler<ListAuthorsQuery,Li
 
     @Override
     public List<AuthorResponse> handle(ListAuthorsQuery query) {
-        return authorRepository.findAllPaged(query.pageIndex(), query.pageSize())
+        return authorRepository.findAll()
                 .stream()
                 .map(authorResponseMapper::toResponse)
                 .toList();
