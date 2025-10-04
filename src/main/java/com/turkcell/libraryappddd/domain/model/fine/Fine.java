@@ -12,21 +12,18 @@ import java.time.LocalDate;
 public class Fine {
 
     private final DomainId<Fine> id;
-    private final DomainId<Loan> loanId;
-    private final DomainId<User> userId;
     private Boolean isPaid;
     private BigDecimal amaount;
     private LocalDate paymentDate;
 
-    private Fine(DomainId<Fine> id, DomainId<Loan> loanId, DomainId<User> userId, Boolean isPaid,
+    private Fine(DomainId<Fine> id, Boolean isPaid,
                  BigDecimal amaount, LocalDate paymentDate) {
         this.id = id;
-        this.loanId = loanId;
-        this.userId = userId;
         this.isPaid = isPaid;
         this.amaount = amaount;
         this.paymentDate = paymentDate;
     }
+
 
     public static Fine create(Boolean isPaid, BigDecimal amount, LocalDate paymentDate)
     {
