@@ -8,6 +8,7 @@ import com.turkcell.libraryappddd.domain.model.category.Category;
 import com.turkcell.libraryappddd.domain.model.publisher.Publisher;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 
 public class Book {
@@ -117,6 +118,8 @@ public class Book {
         this.status = this.availableCopies > 0 ? BookStatus.ACTIVE : BookStatus.INACTIVE;
     }
 
+
+
     // Validation
     private static void checkYear(Integer year) {
         if (year == null) {
@@ -192,5 +195,7 @@ public class Book {
     public DomainId<Publisher> publisherId() { return publisherId; }
     public DomainId<Category> categoryId() { return categoryId; }
 
-
+    public BigDecimal price() {
+        return price;
+    }
 }
