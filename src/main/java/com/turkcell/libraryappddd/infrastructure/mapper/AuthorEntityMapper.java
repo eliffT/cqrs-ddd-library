@@ -6,12 +6,9 @@ import com.turkcell.libraryappddd.domain.model.author.Author;
 import com.turkcell.libraryappddd.infrastructure.entity.AuthorEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
 
 @Component
 public class AuthorEntityMapper {
-
-
     public AuthorEntity toEntity(Author author){
         AuthorEntity authorEntity = new AuthorEntity();
         authorEntity.setId(author.id().value());

@@ -2,7 +2,7 @@ package com.turkcell.libraryappddd.infrastructure.mapper;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
 import com.turkcell.libraryappddd.domain.model.book.Book;
-import com.turkcell.libraryappddd.domain.model.reservation.Reservation;
+import com.turkcell.libraryappddd.domain.model.book.Reservation;
 import com.turkcell.libraryappddd.domain.model.user.User;
 import com.turkcell.libraryappddd.infrastructure.entity.BookEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.ReservationEntity;
@@ -19,12 +19,28 @@ public class ReservationEntityMapper {
         entity.setId(r.id().value());
         entity.setReservationDate(r.reservationDate());
         entity.setExpireAt(r.expireDate());
+        entity.setStatus(r.status());
+
+        if (r.userId() != null)
+            entity.setUser(new UserEntity(){{
+                setId(r.userId().value());
+            }});
+
+        if (r.bookId() != null)
+            entity.setBook(new BookEntity(){{
+                setId(r.bookId().value());
+            }});
 
         return entity;
     }
 
     public Reservation toDomain(ReservationEntity entity) {
         if (entity == null) return null;
+
+        if (entity.book() == null)
+            throw new IllegalStateException("Cannot map Reservation: book is null");
+        if (entity.user() == null)
+            throw new IllegalStateException("Cannot map Reservation: user is null");
 
         return Reservation.rehydrate(
                 new DomainId<Reservation>(entity.id()),

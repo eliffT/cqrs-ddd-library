@@ -1,27 +1,28 @@
 package com.turkcell.libraryappddd.infrastructure.mapper;
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.fine.Fine;
+import com.turkcell.libraryappddd.domain.model.book.Fine;
 import com.turkcell.libraryappddd.infrastructure.entity.FineEntity;
+import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Component
 public class FineEntityMapper {
-    public FineEntity toEntity(Fine fine) {
-        FineEntity FineEntity = new FineEntity();
-        FineEntity.setId(fine.getId().value());
-        FineEntity.setPaid(fine.getPaid());
-        FineEntity.setAmount(fine.getAmaount().doubleValue());
-        FineEntity.setPaymentDate(fine.getPaymentDate());
-        return FineEntity;
+
+    // Domain -> Entity
+    public FineEntity toEntity(Fine fine, LoanEntity loanEntity) {
+        FineEntity entity = new FineEntity();
+        entity.setId(UUID.randomUUID()); // VO olduğu için entity ID burada üretiliyor
+        entity.setAmount(fine.amount());
+        entity.setLoan(loanEntity);
+        entity.setPaid(false);          // yeni oluşturulan fine default olarak ödenmemiş
+        entity.setPaymentDate(null);    // ödenme tarihi yok
+        return entity;
     }
 
+    // Entity -> Domain
     public Fine toDomain(FineEntity entity) {
-        return Fine.rehydrate(
-                new DomainId<Fine>(entity.id()),
-                entity.isPaid(),
-                BigDecimal.valueOf(entity.amount()),
-                entity.paymentDate()
-        );
+        return Fine.create(entity.amount(), entity.reason()); // gecikme miktarı entity üzerinden hesaplanabilir
     }
 }

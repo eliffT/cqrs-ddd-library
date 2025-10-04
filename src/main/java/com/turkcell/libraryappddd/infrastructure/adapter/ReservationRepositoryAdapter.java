@@ -1,7 +1,7 @@
 package com.turkcell.libraryappddd.infrastructure.adapter;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.reservation.Reservation;
+import com.turkcell.libraryappddd.domain.model.book.Reservation;
 import com.turkcell.libraryappddd.domain.repository.ReservationRepository;
 import com.turkcell.libraryappddd.infrastructure.entity.ReservationEntity;
 import com.turkcell.libraryappddd.infrastructure.jparepository.ReservationJpaRepository;

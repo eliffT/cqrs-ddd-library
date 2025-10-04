@@ -1,8 +1,9 @@
 package com.turkcell.libraryappddd.infrastructure.entity;
 
-import com.turkcell.libraryappddd.domain.model.book.BookStatus;
+import com.turkcell.libraryappddd.domain.model.book.enumStatus.BookStatus;
 import jakarta.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,9 @@ public class BookEntity {
     @Column(name = "available_copies", nullable = false)
     private int availableCopies;
 
+    @Column(name = "price", nullable = false, precision = 18, scale = 2)
+    private BigDecimal price;
+
     @Enumerated(EnumType.STRING)
     private BookStatus status;
 
@@ -57,7 +61,6 @@ public class BookEntity {
     public UUID id() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -65,7 +68,6 @@ public class BookEntity {
     public String isbn() {
         return isbn;
     }
-
     public void setIsbn(String isbn) {
         this.isbn = isbn;
     }
@@ -73,7 +75,6 @@ public class BookEntity {
     public String title() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -81,7 +82,6 @@ public class BookEntity {
     public Integer year() {
         return year;
     }
-
     public void setYear(Integer year) {
         this.year = year;
     }
@@ -89,7 +89,6 @@ public class BookEntity {
     public String language() {
         return language;
     }
-
     public void setLanguage(String language) {
         this.language = language;
     }
@@ -97,7 +96,6 @@ public class BookEntity {
     public int totalCopies() {
         return totalCopies;
     }
-
     public void setTotalCopies(int totalCopies) {
         this.totalCopies = totalCopies;
     }
@@ -105,7 +103,6 @@ public class BookEntity {
     public int availableCopies() {
         return availableCopies;
     }
-
     public void setAvailableCopies(int availableCopies) {
         this.availableCopies = availableCopies;
     }
@@ -113,7 +110,6 @@ public class BookEntity {
     public BookStatus status() {
         return status;
     }
-
     public void setStatus(BookStatus status) {
         this.status = status;
     }
@@ -121,7 +117,6 @@ public class BookEntity {
     public CategoryEntity category() {
         return category;
     }
-
     public void setCategory(CategoryEntity category) {
         this.category = category;
     }
@@ -129,7 +124,6 @@ public class BookEntity {
     public AuthorEntity author() {
         return author;
     }
-
     public void setAuthor(AuthorEntity author) {
         this.author = author;
     }
@@ -137,7 +131,6 @@ public class BookEntity {
     public PublisherEntity publisher() {
         return publisher;
     }
-
     public void setPublisher(PublisherEntity publisher) {
         this.publisher = publisher;
     }
@@ -145,7 +138,6 @@ public class BookEntity {
     public List<LoanEntity> loans() {
         return loans;
     }
-
     public void setLoans(List<LoanEntity> loans) {
         this.loans = loans;
     }
@@ -153,8 +145,14 @@ public class BookEntity {
     public List<ReservationEntity> reservations() {
         return reservations;
     }
-
     public void setReservations(List<ReservationEntity> reservations) {
         this.reservations = reservations;
+    }
+
+    public BigDecimal price() {
+        return price;
+    }
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 }

@@ -1,7 +1,7 @@
 package com.turkcell.libraryappddd.infrastructure.adapter;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.loan.Loan;
+import com.turkcell.libraryappddd.domain.model.book.Loan;
 import com.turkcell.libraryappddd.domain.repository.LoanRepository;
 import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import com.turkcell.libraryappddd.infrastructure.jparepository.LoanJpaRepository;

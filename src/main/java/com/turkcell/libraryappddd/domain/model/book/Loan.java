@@ -1,16 +1,18 @@
-package com.turkcell.libraryappddd.domain.model.loan;
+package com.turkcell.libraryappddd.domain.model.book;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.book.Book;
+import com.turkcell.libraryappddd.domain.model.book.enumStatus.LoanStatus;
 import com.turkcell.libraryappddd.domain.model.user.User;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
+import java.util.Optional;
 
 public class Loan {
 
     private final DomainId<Loan> id;
-    private final DomainId<Book> bookId;
     private final DomainId<User> userId;
 
     private LocalDate borrowDate;
@@ -18,41 +20,49 @@ public class Loan {
     private LocalDate returnDate;
     private LoanStatus status;
 
+    // Sabit günlük gecikme ücreti
+    private static final BigDecimal DAILY_LATE_FEE = new BigDecimal("15");
 
-
-    private Loan(DomainId<Loan> id, DomainId<Book> bookId, DomainId<User> userId, LocalDate borrowDate, LocalDate dueDate,
+    private Loan(DomainId<Loan> id, DomainId<User> userId, LocalDate borrowDate, LocalDate dueDate,
                  LoanStatus status) {
         this.id = id;
-        this.bookId = Objects.requireNonNull(bookId, "bookId cannot be null");
         this.userId = Objects.requireNonNull(userId, "userId cannot be null");
         this.borrowDate = borrowDate;
         this.dueDate = dueDate;
         this.status = status;
     }
 
-    public static Loan create(DomainId<Book> bookId, DomainId<User> userId,  int loanDays){
+    public static Loan create(DomainId<User> userId,  int loanDays){
 
         LocalDate borrowDate = LocalDate.now();
         if (loanDays <= 0) throw new IllegalArgumentException("Loan days must be greater than 0");
         LocalDate dueDate = borrowDate.plusDays(loanDays);
 
-        return new Loan(DomainId.generate(), bookId, userId, borrowDate, dueDate, LoanStatus.BORROWED);
+        return new Loan(DomainId.generate(), userId, borrowDate, dueDate, LoanStatus.BORROWED);
     }
 
     public static Loan rehydrate(DomainId<Loan> id,
-                                 DomainId<Book> bookId,
                                  DomainId<User> userId,
                                  LocalDate borrowDate,
                                  LocalDate dueDate,
                                  LocalDate returnDate,
                                  LoanStatus status) {
 
-        Loan loan = new Loan(id, bookId, userId, borrowDate, dueDate, status);
+        Loan loan = new Loan(id, userId, borrowDate, dueDate, status);
         if (status == LoanStatus.RETURNED && returnDate != null)
             loan.returnDate = returnDate;
         return loan;
     }
 
+
+    public Optional<Fine> calculateLateFine() {
+        LocalDate endDate = returnDate != null ? returnDate : LocalDate.now();
+        if(endDate.isAfter(dueDate)) {
+            int daysLate = (int) ChronoUnit.DAYS.between(dueDate, endDate);
+            return Optional.of(Fine.forLate(daysLate, DAILY_LATE_FEE));
+        }
+        return Optional.empty(); // gecikme yok
+    }
 
     private boolean isActive() {
         return status == LoanStatus.BORROWED || status == LoanStatus.LATE;
@@ -64,8 +74,8 @@ public class Loan {
         this.returnDate = LocalDate.now();
     }
 
+    // Ödünç alınan kitapların teslim tarihi kontrol edilir, gecikmiş ise LATE atanır
     public boolean checkAndMarkOverdue(LocalDate today) {
-       // Ödünç alınan kitapların teslim tarihi kontrol edilir, gecikmiş ise LATE atanır
         if (status == LoanStatus.BORROWED && today.isAfter(dueDate)) {
             status = LoanStatus.LATE;
             return true;
@@ -76,14 +86,10 @@ public class Loan {
 
     //Getters
     public DomainId<Loan> id() { return id; }
-    public DomainId<Book> bookId() { return bookId; }
     public DomainId<User> userId() { return userId; }
     public LocalDate borrowDate() { return borrowDate; }
     public LocalDate dueDate() { return dueDate; }
     public LocalDate returnDate() { return returnDate; }
     public LoanStatus status() { return status; }
-
-
-
 
 }

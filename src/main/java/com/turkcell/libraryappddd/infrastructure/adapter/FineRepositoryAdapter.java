@@ -1,55 +1,50 @@
 package com.turkcell.libraryappddd.infrastructure.adapter;
 
-import com.turkcell.libraryappddd.domain.model.DomainId;
-import com.turkcell.libraryappddd.domain.model.fine.Fine;
+import com.turkcell.libraryappddd.domain.model.book.Fine;
+import com.turkcell.libraryappddd.domain.model.book.Loan;
 import com.turkcell.libraryappddd.domain.repository.FineRepository;
 import com.turkcell.libraryappddd.infrastructure.entity.FineEntity;
+import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import com.turkcell.libraryappddd.infrastructure.jparepository.FineJpaRepository;
 import com.turkcell.libraryappddd.infrastructure.mapper.FineEntityMapper;
-import org.springframework.data.domain.PageRequest;
+import com.turkcell.libraryappddd.infrastructure.mapper.LoanEntityMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 public class FineRepositoryAdapter implements FineRepository {
+
     private final FineJpaRepository repository;
-    private final FineEntityMapper mapper;
+    private final FineEntityMapper fineEntityMapper;
+    private final LoanEntityMapper loanEntityMapper;
 
-    public FineRepositoryAdapter(FineJpaRepository repository, FineEntityMapper mapper) {
+    public FineRepositoryAdapter(FineJpaRepository repository, FineEntityMapper fineEntityMapper, LoanEntityMapper loanEntityMapper) {
         this.repository = repository;
-        this.mapper = mapper;
+        this.fineEntityMapper = fineEntityMapper;
+        this.loanEntityMapper = loanEntityMapper;
     }
 
     @Override
-    public Fine save(Fine fine) {
-        FineEntity fineEntity = mapper.toEntity(fine);
-        fineEntity = repository.save(fineEntity);
-        return mapper.toDomain(fineEntity);
+    public Fine save(Fine fine, Loan loan) {
+        LoanEntity loanEntity = loanEntityMapper.toEntity(loan);
+        FineEntity entity = fineEntityMapper.toEntity(fine, loanEntity);
+        repository.save(entity);
+        return fine;
     }
 
     @Override
-    public Optional<Fine> findById(DomainId<Fine> fineId) {
-       return repository.findById(fineId.value()).map(mapper::toDomain);
+    public List<Fine> findByLoan(Loan loan) {
+        LoanEntity loanEntity = loanEntityMapper.toEntity(loan);
+        return repository.findByLoan(loanEntity).stream()
+                .map(fineEntityMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<Fine> findAll() {
-        return repository.findAll().stream().map(mapper::toDomain).toList();
+    public void deleteByLoan(Loan loan) {
+        repository.deleteByLoan(loanEntityMapper.toEntity(loan));
     }
 
-    @Override
-    public List<Fine> findAllPaged(Integer pageIndex, Integer pageSize) {
-        return repository.findAll(PageRequest.of(pageIndex,pageSize))
-                .stream()
-                .map(mapper::toDomain)
-                .toList();
-    }
-
-    @Override
-    public void delete(DomainId<Fine> fineId) {
-        repository.deleteById(fineId.value());
-
-    }
 }

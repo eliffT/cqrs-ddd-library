@@ -1,7 +1,7 @@
 package com.turkcell.libraryappddd.infrastructure.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.turkcell.libraryappddd.domain.model.reservation.ReservationStatus;
+import com.turkcell.libraryappddd.domain.model.book.enumStatus.ReservationStatus;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -40,7 +40,6 @@ public class ReservationEntity {
     public UUID id() {
         return id;
     }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -48,7 +47,6 @@ public class ReservationEntity {
     public LocalDate reservationDate() {
         return reservationDate;
     }
-
     public void setReservationDate(LocalDate reservationDate) {
         this.reservationDate = reservationDate;
     }
@@ -56,7 +54,6 @@ public class ReservationEntity {
     public ReservationStatus status() {
         return status;
     }
-
     public void setStatus(ReservationStatus status) {
         this.status = status;
     }
@@ -64,7 +61,6 @@ public class ReservationEntity {
     public LocalDate createdAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDate createdAt) {
         this.createdAt = createdAt;
     }
@@ -72,7 +68,6 @@ public class ReservationEntity {
     public LocalDate expireAt() {
         return expireAt;
     }
-
     public void setExpireAt(LocalDate expireAt) {
         this.expireAt = expireAt;
     }
@@ -80,7 +75,6 @@ public class ReservationEntity {
     public BookEntity book() {
         return book;
     }
-
     public void setBook(BookEntity book) {
         this.book = book;
     }
@@ -88,7 +82,6 @@ public class ReservationEntity {
     public UserEntity user() {
         return user;
     }
-
     public void setUser(UserEntity user) {
         this.user = user;
     }
