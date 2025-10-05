@@ -9,6 +9,7 @@ import com.turkcell.libraryappddd.domain.model.publisher.Publisher;
 import com.turkcell.libraryappddd.domain.model.user.User;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -159,6 +160,8 @@ public class Book {
         this.availableCopies = this.totalCopies;
         this.status = this.availableCopies > 0 ? BookStatus.ACTIVE : BookStatus.INACTIVE;
     }
+
+
 
     // Validation
     private static void checkYear(Integer year) {
