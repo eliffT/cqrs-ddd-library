@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component
 public class ReservationEntityMapper {
 
-    public ReservationEntity toEntity(Reservation r) {
+    public ReservationEntity toEntity(Reservation r, BookEntity bookEntity) {
         if (r == null) return null;
 
         ReservationEntity entity = new ReservationEntity();
@@ -29,6 +29,7 @@ public class ReservationEntityMapper {
         if (r.bookId() != null)
             entity.setBook(new BookEntity((r.bookId().value())));
 
+        entity.setBook(bookEntity);
         return entity;
     }
 

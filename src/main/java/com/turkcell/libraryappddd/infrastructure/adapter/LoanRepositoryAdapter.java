@@ -1,10 +1,13 @@
 package com.turkcell.libraryappddd.infrastructure.adapter;
 
 import com.turkcell.libraryappddd.domain.model.DomainId;
+import com.turkcell.libraryappddd.domain.model.book.Book;
 import com.turkcell.libraryappddd.domain.model.book.Loan;
 import com.turkcell.libraryappddd.domain.repository.LoanRepository;
+import com.turkcell.libraryappddd.infrastructure.entity.BookEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import com.turkcell.libraryappddd.infrastructure.jparepository.LoanJpaRepository;
+import com.turkcell.libraryappddd.infrastructure.mapper.BookEntityMapper;
 import com.turkcell.libraryappddd.infrastructure.mapper.LoanEntityMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
@@ -15,36 +18,33 @@ import java.util.Optional;
 @Repository
 public class LoanRepositoryAdapter implements LoanRepository {
 private  final LoanJpaRepository repository;
-private final LoanEntityMapper mapper;
+private final LoanEntityMapper loanEntityMapper;
+private final BookEntityMapper bookEntityMapper;
 
-    public LoanRepositoryAdapter(LoanJpaRepository repository, LoanEntityMapper mapper) {
+    public LoanRepositoryAdapter(LoanJpaRepository repository, LoanEntityMapper loanEntityMapper, BookEntityMapper bookEntityMapper) {
         this.repository = repository;
-        this.mapper = mapper;
+        this.loanEntityMapper = loanEntityMapper;
+        this.bookEntityMapper = bookEntityMapper;
     }
 
-    @Override
-    public Loan save(Loan loan) {
-        LoanEntity loanEntity = mapper.toEntity(loan);
-        loanEntity = repository.save(loanEntity);
-        return mapper.toDomain(loanEntity);
-    }
+
 
     @Override
     public Optional<Loan> findById(DomainId<Loan> loanId) {
-        return repository.findById(loanId.value()).map(mapper::toDomain);
+        return repository.findById(loanId.value()).map(loanEntityMapper::toDomain);
     }
 
     @Override
     public List<Loan> findAll() {
 
-        return repository.findAll().stream().map(mapper::toDomain).toList();
+        return repository.findAll().stream().map(loanEntityMapper::toDomain).toList();
     }
 
     @Override
     public List<Loan> findAllPaged(Integer pageIndex, Integer pageSize) {
         return repository.findAll(PageRequest.of(pageIndex,pageSize))
                 .stream()
-                .map(mapper::toDomain)
+                .map(loanEntityMapper::toDomain)
                 .toList();
     }
 

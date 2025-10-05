@@ -22,12 +22,7 @@ private final ReservationEntityMapper mapper;
         this.mapper = mapper;
     }
 
-    @Override
-    public Reservation save(Reservation reservation) {
-        ReservationEntity reservationEntity = mapper.toEntity(reservation);
-        reservationEntity = repository.save(reservationEntity);
-        return mapper.toDomain(reservationEntity);
-    }
+
 
     @Override
     public Optional<Reservation> findById(DomainId<Reservation> reservationId) {
