@@ -52,10 +52,10 @@ public class BookEntity {
     @JoinColumn(name = "publisher_id")
     private PublisherEntity publisher;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<LoanEntity> loans;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations;
 
     public BookEntity() {
