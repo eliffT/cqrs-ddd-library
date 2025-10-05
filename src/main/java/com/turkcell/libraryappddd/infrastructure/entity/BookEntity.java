@@ -58,6 +58,13 @@ public class BookEntity {
     @OneToMany(mappedBy = "book")
     private List<ReservationEntity> reservations;
 
+    public BookEntity() {
+    }
+
+    public BookEntity(UUID id) {
+        this.id = id;
+    }
+
     public UUID id() {
         return id;
     }

@@ -24,12 +24,10 @@ public class ReservationEntityMapper {
         entity.setStatus(r.status());
 
         if (r.userId() != null)
-            entity.setUser(new UserEntity(UUID.fromString(r.userId().value())));
+            entity.setUser(new UserEntity((r.userId().value())));
 
         if (r.bookId() != null)
-            entity.setBook(new BookEntity(UUID.fromString(r.bookId().value())));
-
-
+            entity.setBook(new BookEntity((r.bookId().value())));
 
         return entity;
     }
