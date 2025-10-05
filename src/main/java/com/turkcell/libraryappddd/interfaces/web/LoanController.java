@@ -1,6 +1,6 @@
 package com.turkcell.libraryappddd.interfaces.web;
 
-import com.turkcell.libraryappddd.application.loan.command.CreateLoanCommand;
+
 import com.turkcell.libraryappddd.application.loan.dto.CreatedLoanResponse;
 import com.turkcell.libraryappddd.application.loan.dto.LoanResponse;
 import com.turkcell.libraryappddd.application.loan.query.ListLoansQuery;
@@ -22,15 +22,15 @@ import java.util.UUID;
 public class LoanController {
 
     private final QueryHandler<ListLoansQuery, List<LoanResponse>> listLoansQueryHandler;
-    private final CommandHandler<CreateLoanCommand, CreatedLoanResponse> createLoanCommandHandler;
+
     private final LoanRepository loanRepository;
 
     public LoanController(QueryHandler<ListLoansQuery, List<LoanResponse>> listLoansQueryHandler,
-            CommandHandler<CreateLoanCommand, CreatedLoanResponse> createLoanCommandHandler,
+
             LoanRepository loanRepository)
     {
         this.listLoansQueryHandler = listLoansQueryHandler;
-        this.createLoanCommandHandler = createLoanCommandHandler;
+
         this.loanRepository = loanRepository;
     }
 
@@ -39,10 +39,6 @@ public class LoanController {
         return listLoansQueryHandler.handle(query);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CreatedLoanResponse createLoan(@Valid @RequestBody CreateLoanCommand command) {
-        return createLoanCommandHandler.handle(command);
-    }
+
 
 }

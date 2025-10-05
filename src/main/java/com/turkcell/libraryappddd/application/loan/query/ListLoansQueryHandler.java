@@ -22,7 +22,7 @@ public class ListLoansQueryHandler implements QueryHandler<ListLoansQuery, List<
     @Override
     public List<LoanResponse> handle(ListLoansQuery query) {
         return loanRepository
-                .findAllPaged(query.pageIndex(), query.pageSize())
+                .findAll()
                 .stream()
                 .map(loanResponseMapper::toResponse)
                 .toList();

@@ -102,6 +102,8 @@ public class User {
             throw new IllegalArgumentException("Email cannot be empty");
         if (!email.contains("@"))
             throw new IllegalArgumentException("Email format is invalid");
+        if (email.length() > 255)
+            throw new IllegalArgumentException("Email cannot exceed 255 characters");
     }
 
     private static void validatePhone(String phone) {

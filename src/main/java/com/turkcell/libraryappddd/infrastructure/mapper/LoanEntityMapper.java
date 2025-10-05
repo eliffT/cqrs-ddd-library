@@ -4,6 +4,7 @@ import com.turkcell.libraryappddd.domain.model.DomainId;
 import com.turkcell.libraryappddd.domain.model.book.Book;
 import com.turkcell.libraryappddd.domain.model.book.Loan;
 import com.turkcell.libraryappddd.domain.model.user.User;
+import com.turkcell.libraryappddd.infrastructure.entity.BookEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.LoanEntity;
 import com.turkcell.libraryappddd.infrastructure.entity.UserEntity;
 import org.springframework.stereotype.Component;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 @Component
 public class LoanEntityMapper {
-    public LoanEntity toEntity(Loan loan) {
+    public LoanEntity toEntity(Loan loan, BookEntity bookEntity) {
         if (loan == null) return null;
 
         LoanEntity loanEntity = new LoanEntity();
@@ -24,6 +25,7 @@ public class LoanEntityMapper {
 
         if (loan.userId() != null)
             loanEntity.setUser(new UserEntity(loan.userId().value()));
+        loanEntity.setBook(bookEntity);
         return loanEntity;
     }
 
