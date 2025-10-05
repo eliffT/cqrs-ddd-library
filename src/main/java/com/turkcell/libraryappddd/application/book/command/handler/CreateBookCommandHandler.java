@@ -1,5 +1,6 @@
-package com.turkcell.libraryappddd.application.book.command;
+package com.turkcell.libraryappddd.application.book.command.handler;
 
+import com.turkcell.libraryappddd.application.book.command.CreateBookCommand;
 import com.turkcell.libraryappddd.application.book.dto.CreatedBookResponse;
 import com.turkcell.libraryappddd.application.book.mapper.CreateBookMapper;
 import com.turkcell.libraryappddd.core.cqrs.CommandHandler;

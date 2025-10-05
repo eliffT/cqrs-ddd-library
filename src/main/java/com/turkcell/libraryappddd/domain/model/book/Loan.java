@@ -14,7 +14,6 @@ public class Loan {
 
     private final DomainId<Loan> id;
     private final DomainId<User> userId;
-
     private LocalDate borrowDate;
     private LocalDate dueDate;
     private LocalDate returnDate;
