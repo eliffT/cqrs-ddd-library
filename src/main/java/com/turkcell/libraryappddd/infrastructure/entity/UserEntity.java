@@ -44,6 +44,12 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<LoanEntity> loans;
 
+    public UserEntity(){}
+
+    public UserEntity(UUID id) {
+        this.id = id;
+    }
+
     public UUID id() {
         return id;
     }

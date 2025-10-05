@@ -15,6 +15,8 @@ public class FineEntityMapper {
         FineEntity entity = new FineEntity();
         entity.setId(UUID.randomUUID()); // VO olduğu için entity ID burada üretiliyor
         entity.setAmount(fine.amount());
+        entity.setReason(fine.reason());
+        entity.setCreatedAt(fine.createdAt());
         entity.setLoan(loanEntity);
         entity.setPaid(false);          // yeni oluşturulan fine default olarak ödenmemiş
         entity.setPaymentDate(null);    // ödenme tarihi yok
@@ -23,6 +25,6 @@ public class FineEntityMapper {
 
     // Entity -> Domain
     public Fine toDomain(FineEntity entity) {
-        return Fine.create(entity.amount(), entity.reason()); // gecikme miktarı entity üzerinden hesaplanabilir
+        return Fine.of(entity.amount(), entity.reason()); // gecikme miktarı entity üzerinden hesaplanabilir
     }
 }

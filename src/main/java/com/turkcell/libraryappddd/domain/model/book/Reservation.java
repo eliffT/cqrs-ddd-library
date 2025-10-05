@@ -13,7 +13,6 @@ public class Reservation {
     private final DomainId<User> userId;
     private final DomainId<Book> bookId;
     private LocalDate reservationDate;
-    private final LocalDate creationDate;
     private LocalDate expireDate;
     private ReservationStatus status;
 
@@ -23,20 +22,18 @@ public class Reservation {
         this.userId = userId;
         this.bookId = bookId;
         this.reservationDate = reservationDate;
-        this.creationDate = LocalDate.now();
         this.expireDate = expireDate;
         this.status = status;
     }
 
-    public static Reservation create(DomainId<User> userId, DomainId<Book> bookId, LocalDate reservationDate,
-                                     int validDays){
+    public static Reservation create(DomainId<User> userId, DomainId<Book> bookId, int loanDays){
 
         if (userId == null) throw new IllegalArgumentException("User cannot be null");
         if (bookId == null) throw new IllegalArgumentException("Book cannot be null");
-        if (reservationDate == null) reservationDate = LocalDate.now();
-        if (validDays <= 0) throw new IllegalArgumentException("Valid days must be > 0");
+        LocalDate reservationDate = LocalDate.now();
+        if (loanDays <= 0) throw new IllegalArgumentException("Loan days cannot be less than zero");
 
-        LocalDate expireDate = reservationDate.plusDays(validDays);
+        LocalDate expireDate = reservationDate.plusDays(loanDays);
         return new Reservation(DomainId.generate(), userId, bookId, reservationDate, expireDate, ReservationStatus.ACTIVE);
     }
 
@@ -49,7 +46,6 @@ public class Reservation {
     public void cancel() {
         if (status != ReservationStatus.ACTIVE)
             throw new IllegalStateException("Only active reservations can be cancelled");
-
         status = ReservationStatus.CANCELLED;
     }
 
@@ -71,9 +67,6 @@ public class Reservation {
     public DomainId<Book> bookId() { return bookId; }
     public LocalDate reservationDate() {
         return reservationDate;
-    }
-    public LocalDate creationDate() {
-        return creationDate;
     }
     public LocalDate expireDate() {
         return expireDate;

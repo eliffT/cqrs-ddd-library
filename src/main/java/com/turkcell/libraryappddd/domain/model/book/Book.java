@@ -6,9 +6,13 @@ import com.turkcell.libraryappddd.domain.model.author.Author;
 import com.turkcell.libraryappddd.domain.model.book.enumStatus.BookStatus;
 import com.turkcell.libraryappddd.domain.model.category.Category;
 import com.turkcell.libraryappddd.domain.model.publisher.Publisher;
+import com.turkcell.libraryappddd.domain.model.user.User;
 
 import java.math.BigDecimal;
 import java.util.UUID;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 
 public class Book {
@@ -25,6 +29,9 @@ public class Book {
     private Integer availableCopies;
     private BookStatus status;
     private BigDecimal price;
+
+    private final List<Loan> loans = new ArrayList<>();
+    private final List<Reservation> reservations = new ArrayList<>();
 
 
     private Book(DomainId<Book> id, Isbn isbn, String title, Integer year, String language, Integer totalCopies,
@@ -60,27 +67,63 @@ public class Book {
 
     public static Book rehydrate(DomainId<Book> id, Isbn isbn, String title, Integer year, String language,
                                  Integer totalCopies, Integer availableCopies,  BookStatus status, DomainId<Author> authorId,
-                                 DomainId<Publisher> publisherId, DomainId<Category> categoryId,  BigDecimal price) {
+                                 DomainId<Publisher> publisherId, DomainId<Category> categoryId,  BigDecimal price,
+                                 List<Loan> loans, List<Reservation> reservations) {
 
-        return new Book(id, isbn, title, year, language,
-                        totalCopies, availableCopies,  status,
-                        authorId, publisherId, categoryId, price);
+        Book b = new Book(id, isbn, title, year, language, totalCopies, availableCopies,  status, authorId,
+              publisherId, categoryId, price);
+        if (loans != null) b.loans.addAll(loans);
+        if (reservations != null) b.reservations.addAll(reservations);
+        return b;
     }
 
     // Business Rules / Methods
 
-    public void borrow() {
-        if (availableCopies <= 0) throw new IllegalStateException("No copies available to borrow");
+    public Loan borrow(DomainId<User> userId, int loanDays) {
+        if (availableCopies <= 0) throw new IllegalStateException("No copies available");
+        // business rules: user might be validated externally (user status, fines, etc.)
         this.availableCopies--;
-        ensureStockConsistency(this.totalCopies, this.availableCopies);
         if (this.availableCopies == 0) deactivate();
+        ensureStockConsistency(this.totalCopies, this.availableCopies);
+
+        Loan loan = Loan.create(userId, loanDays);
+        loans.add(loan);
+        return loan;
     }
 
-    public void returnBook() {
+    public void returnLoan(DomainId<Loan> loanId) {
         if (availableCopies >= totalCopies) throw new IllegalStateException("Available copies cannot exceed total copies");
+        Loan loan = findLoan(loanId);
+        loan.markAsReturned();
         this.availableCopies++;
         ensureStockConsistency(this.totalCopies, this.availableCopies);
-        activate();
+        if (this.availableCopies > 0) activate();
+
+    }
+    public Reservation reserve(DomainId<User> userId, int validDays) {
+        Reservation r = Reservation.create(userId, this.id,  validDays);
+        reservations.add(r);
+        return r;
+    }
+
+    public void cancelReservation(DomainId<Reservation> reservationId) {
+        Reservation r = findReservation(reservationId);
+        r.cancel();
+    }
+
+    // helpers
+    private Loan findLoan(DomainId<Loan> loanId) {
+        return loans.stream()
+                .filter(l -> l.id().equals(loanId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Loan not found"));
+    }
+
+    private Reservation findReservation(DomainId<Reservation> reservationId) {
+        return reservations.stream()
+                .filter(r -> r.id().equals(reservationId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Reservation not found"));
     }
 
     public void restock(Integer quantityToRestock) {
@@ -144,7 +187,7 @@ public class Book {
     private static void validateTitle(String title){
         if(title == null || title.isEmpty())
             throw new IllegalArgumentException("Title cannot be null or empty");
-        if(title.length() > 255)
+        if(title.length() >= 255)
             throw new IllegalArgumentException("Title length must be less than 255 characters");
     }
 
@@ -194,8 +237,10 @@ public class Book {
     public DomainId<Author> authorId() { return authorId; }
     public DomainId<Publisher> publisherId() { return publisherId; }
     public DomainId<Category> categoryId() { return categoryId; }
-
     public BigDecimal price() {
         return price;
     }
+    public List<Loan> loans() { return Collections.unmodifiableList(loans); }
+    public List<Reservation> reservations() { return Collections.unmodifiableList(reservations); }
+
 }

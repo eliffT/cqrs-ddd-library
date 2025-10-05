@@ -21,11 +21,8 @@ public class ReservationEntity {
     @Enumerated(EnumType.STRING)
     private ReservationStatus status = ReservationStatus.ACTIVE;
 
-    @Column(name = "created_at")
-    private LocalDate createdAt;
-
-    @Column(name = "expire_at")
-    private LocalDate expireAt;
+    @Column(name = "expire_date")
+    private LocalDate expireDate;
 
     @ManyToOne
     @JoinColumn(name = "book_id")
@@ -58,18 +55,11 @@ public class ReservationEntity {
         this.status = status;
     }
 
-    public LocalDate createdAt() {
-        return createdAt;
+    public LocalDate expireDate() {
+        return expireDate;
     }
-    public void setCreatedAt(LocalDate createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDate expireAt() {
-        return expireAt;
-    }
-    public void setExpireAt(LocalDate expireAt) {
-        this.expireAt = expireAt;
+    public void setExpireDate(LocalDate expireDate) {
+        this.expireDate = expireDate;
     }
 
     public BookEntity book() {
